@@ -66,8 +66,8 @@ configs/vars/*.yml  --(render_configs.py + Jinja2)-->  configs/rendered/*.cfg
 - **`core/acl_parser.py`** — a hand-written Cisco extended-ACL parser and packet-matching simulator (no Batfish, no LLM). Catches typos; does *not* catch rule-ordering/shadowing bugs (see below for why that matters).
 - **`core/subnet_utils.py`** — standalone IP-math helpers (overlap detection, next-free-subnet allocation, CIDR summarization).
 - **Batfish** (Docker, `batfish/allinone`) — reads the rendered `.cfg` files and builds a real model of network behavior: BGP session state, ACL/filter behavior, end-to-end reachability — for every possible packet, not one at a time.
-- **`agent/extract_intent.py`** — reads a `git diff` of `configs/vars/*.yml` and pulls out the intent the person making the change already wrote down, right next to what they changed: either an explicit `# intent: ...` comment (works on any field, not just ACLs) or a Cisco ACL `remark` line. Nothing is guessed — a change with no comment is reported as having no stated intent.
-- **Claude** — no separate script or API key. Whoever has a Claude Code session open in this folder (your existing subscription) takes that stated intent, writes the pybatfish query itself, runs it against the live Batfish container, and explains the real result. Claude never invents the intent — only the human editing the config does that.
+- **`intent.md`** — the one place intent is declared, by the person making the change. No parsing, no inference, nothing derived from a git diff: you write down what a config change is supposed to do, in plain English, before asking Claude to check it.
+- **Claude** — no separate script or API key. Whoever has a Claude Code session open in this folder (your existing subscription) reads `intent.md`, writes the matching pybatfish query itself, runs it against the live Batfish container, and explains the real result. Claude never invents or infers the intent — only the human editing the config does that.
 
 ## Real findings this project has actually caught
 

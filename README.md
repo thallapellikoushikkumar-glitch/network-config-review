@@ -66,8 +66,8 @@ configs/vars/*.yml  --(render_configs.py + Jinja2)-->  configs/rendered/*.cfg
 - **`core/acl_parser.py`** — a hand-written Cisco extended-ACL parser and packet-matching simulator (no Batfish, no LLM). Catches typos; does *not* catch rule-ordering/shadowing bugs (see below for why that matters).
 - **`core/subnet_utils.py`** — standalone IP-math helpers (overlap detection, next-free-subnet allocation, CIDR summarization).
 - **Batfish** (Docker, `batfish/allinone`) — reads the rendered `.cfg` files and builds a real model of network behavior: BGP session state, ACL/filter behavior, end-to-end reachability — for every possible packet, not one at a time.
-- **`agent/infer_intent.py`** — reads a `git diff` of `configs/vars/*.yml` and infers what an uncommitted change was trying to do, without anyone typing an intent sentence. An added ACL rule with a `remark` right above it counts as a real, human-stated intent (`[stated]`); anything else is reported as a plain structural diff (`[inferred]`), clearly labeled as a guess rather than a known intent.
-- **Claude** — no separate script or API key. Whoever has a Claude Code session open in this folder (your existing subscription) takes that inferred (or directly stated) intent, writes the pybatfish query itself, runs it against the live Batfish container, and explains the real result.
+- **`agent/extract_intent.py`** — reads a `git diff` of `configs/vars/*.yml` and pulls out the intent the person making the change already wrote down, right next to what they changed: either an explicit `# intent: ...` comment (works on any field, not just ACLs) or a Cisco ACL `remark` line. Nothing is guessed — a change with no comment is reported as having no stated intent.
+- **Claude** — no separate script or API key. Whoever has a Claude Code session open in this folder (your existing subscription) takes that stated intent, writes the pybatfish query itself, runs it against the live Batfish container, and explains the real result. Claude never invents the intent — only the human editing the config does that.
 
 ## Real findings this project has actually caught
 

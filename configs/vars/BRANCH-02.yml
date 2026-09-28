@@ -24,5 +24,12 @@ wan_interfaces:
     neighbor_ip: 172.16.12.1
     neighbor_as: 65002
     neighbor_description: "eBGP to DC-B-CORE"
+    acl_out: BRANCH02-TO-DCB-OUT
 
-acls: []
+acls:
+  - name: BRANCH02-TO-DCB-OUT
+    lines:
+      - "remark allow HTTPS from branch LAN to DC-B analytics-db"
+      - "permit tcp 10.20.2.0 0.0.0.255 host 10.2.2.10 eq 443"
+      - "deny ip 10.20.2.0 0.0.0.255 any"
+      - "permit ip any any"

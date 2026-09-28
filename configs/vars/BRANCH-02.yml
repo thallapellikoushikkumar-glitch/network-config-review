@@ -1,0 +1,28 @@
+hostname: BRANCH-02
+loopback_ip: 10.255.2.1
+as_number: 65102
+
+lan_interfaces:
+  - name: GigabitEthernet0/0
+    description: "BRANCH-02 LAN"
+    ip: 10.20.2.1
+    netmask: 255.255.255.0
+    network: 10.20.2.0
+
+wan_interfaces:
+  - name: GigabitEthernet0/1
+    description: "WAN to DC-A-CORE"
+    ip: 172.16.2.2
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.2.1
+    neighbor_as: 65001
+    neighbor_description: "eBGP to DC-A-CORE"
+  - name: GigabitEthernet0/2
+    description: "WAN to DC-B-CORE"
+    ip: 172.16.12.2
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.12.1
+    neighbor_as: 65002
+    neighbor_description: "eBGP to DC-B-CORE"
+
+acls: []

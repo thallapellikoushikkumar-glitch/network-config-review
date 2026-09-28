@@ -1,0 +1,39 @@
+hostname: BRANCH-01
+loopback_ip: 10.255.1.1
+as_number: 65101
+
+lan_interfaces:
+  - name: GigabitEthernet0/0
+    description: "BRANCH-01 LAN"
+    ip: 10.20.1.1
+    netmask: 255.255.255.0
+    network: 10.20.1.0
+
+wan_interfaces:
+  - name: GigabitEthernet0/1
+    description: "WAN to DC-A-CORE"
+    ip: 172.16.1.2
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.1.1
+    neighbor_as: 65001
+    neighbor_description: "eBGP to DC-A-CORE"
+  - name: GigabitEthernet0/2
+    description: "WAN to DC-B-CORE"
+    ip: 172.16.11.2
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.11.1
+    neighbor_as: 65002
+    neighbor_description: "eBGP to DC-B-CORE"
+    acl_out: BRANCH01-TO-DCB-OUT
+
+acls:
+  - name: BRANCH01-TO-DCB-OUT
+    lines:
+      - "remark allow HTTPS from branch LAN to DC-B analytics-db"
+      - "permit tcp 10.20.1.0 0.0.0.255 host 10.2.2.10 eq 443"
+      - "remark allow SSH mgmt access to analytics-db"
+      - "permit tcp 10.20.1.0 0.0.0.255 host 10.2.2.10 eq 22"
+      - "deny ip 10.20.1.0 0.0.0.255 any"
+      - "remark allow syslog from branch LAN to new syslog collector"
+      - "permit udp 10.20.1.0 0.0.0.255 host 10.2.2.20 eq 514"
+      - "permit ip any any"

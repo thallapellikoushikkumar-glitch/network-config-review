@@ -1,0 +1,35 @@
+hostname: DC-A-CORE
+loopback_ip: 10.255.0.1
+as_number: 65001
+
+lan_interfaces:
+  - name: GigabitEthernet0/0
+    description: "DC-A internal services (payment-api = 10.1.1.10)"
+    ip: 10.1.1.1
+    netmask: 255.255.255.0
+    network: 10.1.1.0
+
+wan_interfaces:
+  - name: GigabitEthernet0/1
+    description: "WAN to BRANCH-01"
+    ip: 172.16.1.1
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.1.2
+    neighbor_as: 65101
+    neighbor_description: "eBGP to BRANCH-01"
+  - name: GigabitEthernet0/2
+    description: "WAN to BRANCH-02"
+    ip: 172.16.2.1
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.2.2
+    neighbor_as: 65102
+    neighbor_description: "eBGP to BRANCH-02"
+  - name: GigabitEthernet0/3
+    description: "WAN to BRANCH-03"
+    ip: 172.16.3.1
+    netmask: 255.255.255.252
+    neighbor_ip: 172.16.3.2
+    neighbor_as: 65103
+    neighbor_description: "eBGP to BRANCH-03"
+
+acls: []
